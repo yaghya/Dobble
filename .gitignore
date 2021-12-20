@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#ignore
+dobble/experiments/
+dobble/generated/
+dobble/env/
+dobble/data/archive/
+dobble/data/archive.zip
