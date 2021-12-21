@@ -2,8 +2,8 @@ from math import exp
 import sys,os
 
 sys.path.append("./")
-from spot_it.utils.svg2png import convert_svg2png
-from spot_it.core.dobble import dobble_pipeline
+# from spot_it.utils.svg2png import convert_svg2png
+from spot_it.core.create_dobble_cards_svg import dobble_pipeline
 
 def save_image_names(img_file_path,expt_no,output_dir):
     file1 = open(img_file_path,'r+')
@@ -23,5 +23,5 @@ if __name__ == "__main__":
     save_image_names(img_file_path,expt_no,output_dir)
     pipeline = dobble_pipeline(order,img_file_path,output_dir,expt_no)
     pipeline.create_cards()
-    convert_svg2png(output_dir,expt_no)
+    # convert_svg2png(output_dir,expt_no)
     print("cards_created",expt_no)
