@@ -30,7 +30,8 @@ def generateCards(numberOfSymb,expt_no):
 	for ti in t:
 		cards = cards + ti
 
-	file_name = f'./generated/1/card_pack.csv'
+	# file_name = f'./generated/{expt_no}/card_pack.csv'
+	file_name = f'./generated/card_pack.csv'
 	# opening the csv file in 'w+' mode
 	file = open(file_name, 'w+', newline ='')
 	with file:    

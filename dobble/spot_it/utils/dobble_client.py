@@ -8,8 +8,8 @@ class Network:
         self.host = "localhost"
         self.port = 5555
         self.addr = (self.host, self.port)
-        self.board = self.connect()
-        self.board = pickle.loads(self.board)
+        self.dobble = self.connect()
+        self.dobble = pickle.loads(self.dobble)
 
     def connect(self):
         self.client.connect(self.addr)

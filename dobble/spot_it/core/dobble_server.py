@@ -1,5 +1,8 @@
 import socket
 from _thread import *
+import sys
+sys.path.append("./")
+
 from spot_it.utils.dobble import Dobble
 import pickle
 import time
@@ -45,21 +48,21 @@ def threaded_client(conn, game, spec=False):
 
     if not spec:
         name = None
-        bo = games[game]
+        dobble = games[game]
 
         if connections % 2 == 0:
-            currentId = "w"
+            currentId = "p1"
         else:
-            currentId = "b"
+            currentId = "p2"
 
-        bo.start_user = currentId
+        dobble.start_user = currentId
 
         # Pickle the object and send it to the server
-        data_string = pickle.dumps(bo)
+        data_string = pickle.dumps(dobble)
 
-        if currentId == "b":
-            bo.ready = True
-            bo.startTime = time.time()
+        if currentId == "p2":
+            dobble.ready = True
+            dobble.startTime = time.time()
 
         conn.send(data_string)
         connections += 1
@@ -74,42 +77,47 @@ def threaded_client(conn, game, spec=False):
                 if not d:
                     break
                 else:
-                    if data.count("select") > 0:
-                        all = data.split(" ")
-                        col = int(all[1])
-                        row = int(all[2])
-                        color = all[3]
-                        bo.select(col, row, color)
+                    # if data.count("select") > 0:
+                    #     all = data.split(" ")
+                    #     col = int(all[1])
+                    #     row = int(all[2])
+                    #     color = all[3]
+                    #     dobble.select(col, row, color)
 
-                    if data == "winner b":
-                        bo.winner = "b"
-                        print("[GAME] Player b won in game", game)
-                    if data == "winner w":
-                        bo.winner = "w"
-                        print("[GAME] Player w won in game", game)
+                    if data == "winner p2":
+                        dobble.winner = "p2"
+                        print("[GAME] Player p2 won in game", game)
+                    if data == "winner p1":
+                        dobble.winner = "p1"
+                        print("[GAME] Player p1 won in game", game)
 
-                    if data == "update moves":
-                        bo.update_moves()
+                    if data == "show_card":
+                        print("updating card")
+                        dobble.update_card()
 
                     if data.count("name") == 1:
-                        name = data.split(" ")[1]
-                        if currentId == "b":
-                            bo.p2Name = name
-                        elif currentId == "w":
-                            bo.p1Name = name
+                        name = data.split(" ")[1:]
+                        print(name)
+                        name = " ".join(name)
+                        print(name)
+                        if currentId == "p2":
+                            dobble.p2Name = name
+                        elif currentId == "p1":
+                            dobble.p1Name = name
 
-                    #print("Recieved board from", currentId, "in game", game)
+                    #print("Recieved doble_game from", currentId, "in game", game)
 
-                    if bo.ready:
-                        if bo.turn == "w":
-                            bo.time1 = 900 - (time.time() - bo.startTime) - bo.storedTime1
-                        else:
-                            bo.time2 = 900 - (time.time() - bo.startTime) - bo.storedTime2
+                    # if dobble.ready:
+                    #     if dobble.turn == "p1":
+                    #         dobble.time1 = 900 - (time.time() - dobble.startTime) - dobble.storedTime1
+                    #     else:
+                    #         dobble.time2 = 900 - (time.time() - dobble.startTime) - dobble.storedTime2
 
-                    sendData = pickle.dumps(bo)
-                    #print("Sending board to player", currentId, "in game", game)
+                    sendData = pickle.dumps(dobble)
+                    #print("Sending doble_game to player", currentId, "in game", game)
 
                 conn.sendall(sendData)
+                print("sent_data")
 
             except Exception as e:
                 print(e)
@@ -126,14 +134,14 @@ def threaded_client(conn, game, spec=False):
     else:
         available_games = list(games.keys())
         game_ind = 0
-        bo = games[available_games[game_ind]]
-        bo.start_user = "s"
-        data_string = pickle.dumps(bo)
+        dobble = games[available_games[game_ind]]
+        dobble.start_user = "s"
+        data_string = pickle.dumps(dobble)
         conn.send(data_string)
 
         while True:
             available_games = list(games.keys())
-            bo = games[available_games[game_ind]]
+            dobble = games[available_games[game_ind]]
             try:
                 d = conn.recv(128)
                 data = d.decode("utf-8")
@@ -152,11 +160,11 @@ def threaded_client(conn, game, spec=False):
                             if game_ind < 0:
                                 game_ind = len(available_games) -1
 
-                        bo = games[available_games[game_ind]]
+                        dobble = games[available_games[game_ind]]
                     except:
                         print("[ERROR] Invalid Game Recieved from Spectator")
 
-                    sendData = pickle.dumps(bo)
+                    sendData = pickle.dumps(dobble)
                     conn.sendall(sendData)
 
             except Exception as e:
