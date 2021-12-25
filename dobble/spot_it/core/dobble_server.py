@@ -1,11 +1,21 @@
 import socket
 from _thread import *
 import sys
+from tkinter.constants import S
 sys.path.append("./")
 
 from spot_it.utils.dobble import Dobble
 import pickle
 import time
+import pygame
+# pygame.init()
+# infos = pygame.display.Info()
+# screen_size = (infos.current_w, infos.current_h)
+# pygame.quit()
+clock = pygame.time.Clock()
+screen_size = (1600,1000)
+
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -25,7 +35,7 @@ print("[START] Waiting for a connection")
 
 connections = 0
 
-games = {0:Dobble()}
+games = {0:Dobble(screen_size[0],screen_size[1])}
 
 spectartor_ids = [] 
 specs = 0
@@ -60,12 +70,13 @@ def threaded_client(conn, game, spec=False):
         # Pickle the object and send it to the server
         data_string = pickle.dumps(dobble)
 
+        conn.send(data_string)
+        connections += 1
+
         if currentId == "p2":
             dobble.ready = True
             dobble.startTime = time.time()
 
-        conn.send(data_string)
-        connections += 1
 
         while True:
             if game not in games:
@@ -77,7 +88,9 @@ def threaded_client(conn, game, spec=False):
                 if not d:
                     break
                 else:
-                    # if data.count("select") > 0:
+                    if data.count("select") > 0:
+                        print("updating card")
+                        dobble.update_card()
                     #     all = data.split(" ")
                     #     col = int(all[1])
                     #     row = int(all[2])
@@ -91,15 +104,14 @@ def threaded_client(conn, game, spec=False):
                         dobble.winner = "p1"
                         print("[GAME] Player p1 won in game", game)
 
-                    if data == "show_card":
-                        print("updating card")
-                        dobble.update_card()
+                    # if data == "show_card":
+                    #     print("updating card")
+                    #     dobble.update_card()
 
                     if data.count("name") == 1:
+                        print("updating name")
                         name = data.split(" ")[1:]
-                        print(name)
                         name = " ".join(name)
-                        print(name)
                         if currentId == "p2":
                             dobble.p2Name = name
                         elif currentId == "p1":
@@ -113,11 +125,13 @@ def threaded_client(conn, game, spec=False):
                     #     else:
                     #         dobble.time2 = 900 - (time.time() - dobble.startTime) - dobble.storedTime2
 
+                    if dobble.ready and dobble.card_pair_no ==0:
+                        print("starting game")
+                        dobble.update_card()
                     sendData = pickle.dumps(dobble)
                     #print("Sending doble_game to player", currentId, "in game", game)
 
                 conn.sendall(sendData)
-                print("sent_data")
 
             except Exception as e:
                 print(e)
@@ -190,10 +204,10 @@ while True:
         if g == -1:
             try:
                 g = list(games.keys())[-1]+1
-                games[g] = Dobble()
+                games[g] = Dobble(screen_size[0],screen_size[1])
             except:
                 g = 0
-                games[g] = Dobble()
+                games[g] = Dobble(screen_size[0],screen_size[1])
 
         '''if addr[0] in spectartor_ids and specs == 0:
             spec = True

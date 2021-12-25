@@ -1,6 +1,12 @@
 import random
 import time
 import csv
+import numpy as np
+import math
+# import tkinter
+# root = tkinter.Tk()
+# root.withdraw()
+# width,height = root.winfo_screenwidth(), root.winfo_screenheight()
 
 def read_csv(file_path):
     with open(file_path, newline='\n') as f:
@@ -15,7 +21,7 @@ class Dobble:
 
     card_pack_path = "./generated/card_pack.csv"
 
-    def __init__(self):
+    def __init__(self,width,height):
 
         self.ready = False
         # self.image_path = "path using pack_no"
@@ -39,6 +45,33 @@ class Dobble:
         self.cards_pairs_list = self.get_cards_pairs_list()
 
         self.card_pair_no = 0
+
+        global square1,square2
+
+        x = width
+        y = height
+
+        r = (0.45/2)*x
+        d = r - (r/math.sqrt(2))
+        h = (y - 0.45*x)/2
+
+        x1  = d+(0.1/4)*x
+        x2 = x1 + math.sqrt(2)*r
+        x3 = 2*r + (0.3/4)*x + d
+        x4 = x3 + math.sqrt(2)*r
+
+        y1 = h+d
+        y2 = h+d +math.sqrt(2)*r
+
+        A = [x1,x2]
+        B = [y1,y2]
+
+        C = [x3,x4]
+        D = [y1,y2]
+
+        square1 = [[(a,b) for a in np.linspace(A[0],A[1],7)] for b in np.linspace(B[0],B[1],7) ]
+        square2 = [[(a,b) for a in np.linspace(C[0],C[1],7)] for b in np.linspace(D[0],D[1],7) ]
+
 
     def get_cards_pairs_list(self):
         number_of_cards = len(self.cards_list)
@@ -64,6 +97,17 @@ class Dobble:
     def update_card(self):
 
         #image_mapping connect images path in csv and the image coordinates
+        card = [[0,0],[0,2],[0,4],[2,0],[2,2],[2,4],[4,0],[4,2],[4,4]]
+        card = random.sample(card,8)
+        for i in range(len(self.card1_images)):
+            u,v = card[i]
+            # print(u,v)
+            len(random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]))
+            self.card1_images[i] = random.choice([[(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],3)[1:2]]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],3)[1:2]]),random.choice([[(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],3)[1:2]]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],3)[1:2]])
+            
+            self.card2_images[i] = [random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]),
+                                random.choice([[(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],3)[1:2]]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],3)[1:2]])]
+    
         self.card1 ,self.card2 = self.cards_pairs_list[self.card_pair_no]
         self.common_image = self.get_common_image(self.card_pair_no)
         self.card_pair_no+=1
