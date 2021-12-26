@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 import sys
-from tkinter.constants import S
+# from tkinter.constants import S
 sys.path.append("./")
 
 from spot_it.utils.dobble import Dobble

@@ -53,9 +53,10 @@ def menu_screen(win, name):
 def display_image(coord,gameDisplay,colour):
     coord1 =coord[0]
     coord2 = coord[1]
+    print(coord1,coord2)
     # print(coord[0][0])
     # import pdb; pdb.set_trace()
-    rect = pygame.Rect(coord1[0][0],coord1[0][1],coord2[0][0]-coord1[0][0],coord2[0][1]-coord1[0][1])
+    rect = pygame.Rect(coord1[0],coord1[1],coord2[0]-coord1[0],coord2[1]-coord1[1])
     pygame.draw.rect(gameDisplay, pygame.Color(colour), rect)
 
     return

@@ -102,11 +102,11 @@ class Dobble:
         for i in range(len(self.card1_images)):
             u,v = card[i]
             # print(u,v)
-            len(random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]))
-            self.card1_images[i] = random.choice([[(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],3)[1:2]]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],3)[1:2]]),random.choice([[(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],3)[1:2]]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],3)[1:2]])
+            # print([(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:3]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:3]])
             
-            self.card2_images[i] = [random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]),
-                                random.choice([[(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],3)[1:2]]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],3)[1:2]])]
+            self.card1_images[i] = [random.choice([(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],3)[1:3]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],3)[1:3]]),random.choice([(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],3)[1:3]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],3)[1:3]])]
+            print(self.card1_images[i])
+            self.card2_images[i] = [random.choice([(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:3]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:3]]),random.choice([(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],3)[1:3]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],3)[1:3]])]
     
         self.card1 ,self.card2 = self.cards_pairs_list[self.card_pair_no]
         self.common_image = self.get_common_image(self.card_pair_no)
