@@ -107,6 +107,11 @@ def threaded_client(conn, game, spec=False):
                     # if data == "show_card":
                     #     print("updating card")
                     #     dobble.update_card()
+                    if data.count("width&height") == 1:
+                        print("updating width and height")
+                        string = data.split(" ")
+                        dobble.Width = int(string[1])
+                        dobble.Height = int(string[2])
 
                     if data.count("name") == 1:
                         print("updating name")
@@ -127,6 +132,7 @@ def threaded_client(conn, game, spec=False):
 
                     if dobble.ready and dobble.card_pair_no ==0:
                         print("starting game")
+                        print(dobble.Width,dobble.Height)
                         dobble.update_card()
                     sendData = pickle.dumps(dobble)
                     #print("Sending doble_game to player", currentId, "in game", game)

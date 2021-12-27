@@ -42,8 +42,8 @@ def menu_screen(win, name):
                 offline = False
                 try:
                     dobble = connect()
-                    dobble.Width = width
-                    dobble.Height = height
+                    # dobble.Width = width
+                    # dobble.Height = height
                     print("connection established")
                     run = False
                     main()
@@ -165,6 +165,7 @@ def main():
     # print("card_updated")
     dobble = n.send("name " + name)
     print(dobble.p1name,dobble.p2name)
+    dobble = n.send("width&height "+str(width) +" "+str(height))
     clock = pygame.time.Clock()
     run = True
     win.fill(white)
