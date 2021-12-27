@@ -21,7 +21,7 @@ class Dobble:
 
     card_pack_path = "./generated/card_pack.csv"
 
-    def __init__(self,width,height):
+    def __init__(self):
 
         self.ready = False
         # self.image_path = "path using pack_no"
@@ -46,18 +46,20 @@ class Dobble:
 
         self.card_pair_no = 0
 
+
+        self.Width = 1200
+        self.Height = 900
+    
+    def compute_image_coordinates(self):
         global square1,square2
 
-        x = width
-        y = height
-
-        r = (0.45/2)*x
+        r = (0.45/2)*self.Width
         d = r - (r/math.sqrt(2))
-        h = (y - 0.45*x)/2
+        h = (self.Height - 0.45*self.Width)/2
 
-        x1  = d+(0.1/4)*x
+        x1  = d+(0.1/4)*self.Width
         x2 = x1 + math.sqrt(2)*r
-        x3 = 2*r + (0.3/4)*x + d
+        x3 = 2*r + (0.3/4)*self.Width + d
         x4 = x3 + math.sqrt(2)*r
 
         y1 = h+d
@@ -98,6 +100,9 @@ class Dobble:
 
         #image_mapping connect images path in csv and the image coordinates
         card = [[0,0],[0,2],[0,4],[2,0],[2,2],[2,4],[4,0],[4,2],[4,4]]
+
+        # if (self.card_pair_no==0):
+        self.compute_image_coordinates()
         card = random.sample(card,8)
         for i in range(len(self.card1_images)):
             u,v = card[i]

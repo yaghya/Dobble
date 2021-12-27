@@ -42,6 +42,8 @@ def menu_screen(win, name):
                 offline = False
                 try:
                     dobble = connect()
+                    dobble.Width = width
+                    dobble.Height = height
                     print("connection established")
                     run = False
                     main()
@@ -170,12 +172,12 @@ def main():
         if not color == "s":
             # # p1Time = dobble.time1
             # # p2Time = dobble.time2
-            # if count == 60:
-            dobble = n.send("get")
-            # count = 0
-            # else:
-            #     count += 1
-            # clock.tick(30)
+            if count == 60:
+                dobble = n.send("get")
+                count = 0
+            else:
+                count += 1
+            clock.tick(30)
 
         try:
             # redraw_gameWindow(win, dobble, p1Time, p2Time, color, dobble.ready) 

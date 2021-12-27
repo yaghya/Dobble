@@ -13,7 +13,7 @@ import pygame
 # screen_size = (infos.current_w, infos.current_h)
 # pygame.quit()
 clock = pygame.time.Clock()
-screen_size = (1600,1000)
+# screen_size = (1600,1000)
 
 
 
@@ -35,7 +35,7 @@ print("[START] Waiting for a connection")
 
 connections = 0
 
-games = {0:Dobble(screen_size[0],screen_size[1])}
+games = {0:Dobble()}
 
 spectartor_ids = [] 
 specs = 0
@@ -204,10 +204,10 @@ while True:
         if g == -1:
             try:
                 g = list(games.keys())[-1]+1
-                games[g] = Dobble(screen_size[0],screen_size[1])
+                games[g] = Dobble()
             except:
                 g = 0
-                games[g] = Dobble(screen_size[0],screen_size[1])
+                games[g] = Dobble()
 
         '''if addr[0] in spectartor_ids and specs == 0:
             spec = True
