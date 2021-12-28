@@ -1,3 +1,6 @@
+from operator import xor
+
+from numpy.testing._private.utils import import_nose
 import pygame
 import os
 import time
@@ -55,7 +58,7 @@ def menu_screen(win, name):
 def display_image(coord,gameDisplay,colour):
     coord1 =coord[0]
     coord2 = coord[1]
-    print(coord1,coord2)
+    # print(coord1,coord2)
     # print(coord[0][0])
     # import pdb; pdb.set_trace()
     rect = pygame.Rect(coord1[0],coord1[1],coord2[0]-coord1[0],coord2[1]-coord1[1])
@@ -73,6 +76,11 @@ def load_images(dobble,win):
     # card = [[0,0],[0,2],[0,4],[2,0],[2,2],[2,4],[4,0],[4,2],[4,4]]
     # card = random.sample(card,8)
     # print(len(dobble.card1_images),len(dobble.card2_images),len(square1),len(square2))
+    r = int((0.45/2)*width)
+    h = (height - 0.45*width)/2
+    pygame.draw.circle(win, "black", (int(r+(0.1/4)*width),int(height/2) ), r, int(width/100))
+    pygame.draw.circle(win, "black", (int(3*r+(0.3/4)*width),int(height/2) ), r, int(width/100))
+
     for i in range(len(dobble.card1_images)):
         # u,v = card[i]
         # print(u,v)
@@ -234,13 +242,40 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP and color != "s":
                 if  dobble.ready:
                     pos = pygame.mouse.get_pos()
-                    # i, j = click(pos) # depending on the pos select the image
-                    dobble = n.send("select " + str(pos[0]) + " " + str(pos[1]) + " " + color)
+                    # print(pos)
+                    card_number,image_num = click(pos) # depending on the pos select the image
+                    if image_num!=-1:
+                        print(image_num)
+                        dobble = n.send("selected " + card_number+" "+ str(image_num))
                     # check whether it is correct or not and highlight the image with red or green colour
     
     n.disconnect()
     dobble = 0
     menu_screen(win)
+
+def click(pos):
+    """
+    return selected image
+    """
+    x = pos[0]
+    y = pos[1]
+
+    for i,coord in enumerate(dobble.card1_images):
+        A = coord[0]
+        B = coord[1]
+        if A[0]<=x<=B[0] and A[1]<=y<=B[1]:
+            # print(A,B,x,y)
+            return "card1",i
+    
+    for i,coord in enumerate(dobble.card2_images):
+        A = coord[0]
+        B = coord[1]
+        if A[0]<=x<=B[0] and A[1]<=x<=B[1]:
+            return "card2",i
+    
+    return -1
+    
+
 
 def end_screen(win, text):
     pygame.font.init()
