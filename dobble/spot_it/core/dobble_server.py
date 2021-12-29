@@ -90,10 +90,10 @@ def threaded_client(conn, game, spec=False):
                 else:
                     if data.count("selected") > 0:
                         string = data.split(" ")
-                        if string[1] in "card1" and int(string[2])==dobble.card1_common_image:
+                        if string[1]=="card1" and int(string[2])==int(dobble.card1_common_image):
                             print("updating card")
                             dobble.update_card()
-                        elif string[1] in "card2" and int(string[2])==dobble.card2_common_image:
+                        elif string[1]=="card2" and int(string[2])==int(dobble.card2_common_image):
                             print("updating card")
                             dobble.update_card()
                     #     all = data.split(" ")

@@ -78,8 +78,9 @@ def load_images(dobble,win):
     # print(len(dobble.card1_images),len(dobble.card2_images),len(square1),len(square2))
     r = int((0.45/2)*width)
     h = (height - 0.45*width)/2
-    pygame.draw.circle(win, "black", (int(r+(0.1/4)*width),int(height/2) ), r, int(width/100))
-    pygame.draw.circle(win, "black", (int(3*r+(0.3/4)*width),int(height/2) ), r, int(width/100))
+    print(int(r+(0.1/4)*width),int(h+r),int(3*r+(0.3/4)*width),int(h+r),r,h)
+    pygame.draw.circle(win, "black", (int(r+(0.1/4)*width),int(h+r) ), r, int(width/100))
+    pygame.draw.circle(win, "black", (int(3*r+(0.3/4)*width),int(h+r) ), r, int(width/100))
 
     for i in range(len(dobble.card1_images)):
         # u,v = card[i]
@@ -270,10 +271,10 @@ def click(pos):
     for i,coord in enumerate(dobble.card2_images):
         A = coord[0]
         B = coord[1]
-        if A[0]<=x<=B[0] and A[1]<=x<=B[1]:
+        if A[0]<=x<=B[0] and A[1]<=y<=B[1]:
             return "card2",i
     
-    return -1
+    return "no_card",-1
     
 
 

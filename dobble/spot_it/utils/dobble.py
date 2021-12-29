@@ -70,9 +70,12 @@ class Dobble:
 
         C = [x3,x4]
         D = [y1,y2]
+        # print(A,B,C,D)
 
         square1 = [[(a,b) for a in np.linspace(A[0],A[1],7)] for b in np.linspace(B[0],B[1],7) ]
+        # print(square1)
         square2 = [[(a,b) for a in np.linspace(C[0],C[1],7)] for b in np.linspace(D[0],D[1],7) ]
+        # print(square2)
 
 
     def get_cards_pairs_list(self):
@@ -110,17 +113,19 @@ class Dobble:
             # print(u,v)
             # print([(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:3]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:3]])
             
-            self.card1_images[i] = [random.choice([(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],5)[1:3]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],5)[3:5]]),random.choice([(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],5)[1:3]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],5)[3:5]])]
-            # print(self.card1_images[i])
+            self.card1_images[i] = [random.choice([(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],8)[1:3]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],6)[1:3]]),random.choice([(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],8)[5:7]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],8)[5:7]])]
+            # print(self.card1_images[i],square1[u][v],square1[u+1][v+1],square1[u+2][v+2])
             u,v = card2[i]
-            self.card2_images[i] = [random.choice([(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],5)[1:3]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],5)[3:5]]),random.choice([(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],5)[1:3]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],5)[3:5]])]
-    
+            self.card2_images[i] = [random.choice([(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],8)[1:3]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],6)[1:3]]),random.choice([(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],8)[5:7]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],8)[5:7]])]
+
+        # print("card1",self.card1_images)
+        # print("card2",self.card2_images)
         # self.card1 ,self.card2 = self.cards_pairs_list[self.card_pair_no]
         self.common_image = self.get_common_image(self.card_pair_no)
-        print(self.card1,self.card2)
+        # print(self.card1,self.card2)
 
-        print(np.where(np.asarray(self.card1)==self.common_image),np.asarray(self.card1))
+        # print(np.where(np.asarray(self.card1)==self.common_image),np.asarray(self.card1))
         self.card1_common_image = np.where(np.asarray(self.card1)==self.common_image[0])[0][0]
         self.card2_common_image = np.where(np.asarray(self.card2)==self.common_image[0])[0][0]
-        print(self.common_image,self.card_pair_no)
+        # print(self.common_image,self.card_pair_no)
         self.card_pair_no+=1
