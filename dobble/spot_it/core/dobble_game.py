@@ -13,10 +13,11 @@ sys.path.append("./")
 from spot_it.utils.dobble_client import Network
 import pickle
 pygame.font.init()
+background_colour = (248,248,248)
 
 # board = pygame.transform.scale(pygame.image.load(os.path.join("img","board_alt.png")), (750, 750))
 starting_image =  pygame.image.load(os.path.join("data/starting_image.png"))
-white = (255,255,255)
+white = background_colour
 card_num = 0
 
 def menu_screen(win, name):
@@ -68,12 +69,6 @@ def display_image(coord,image_path, gameDisplay):
     win.blit(img, (coord1[0],coord1[1]))
     # rect = pygame.Rect(coord1[0],coord1[1],coord2[0]-coord1[0],coord2[1]-coord1[1])
     # pygame.draw.rect(gameDisplay, pygame.Color(colour), rect)
-
-    return
-    card_img_name = f'{self.card_dir}/card_{card_no}.png'
-    card_img = pygame.image.load(card_img_name)
-    card_img = pygame.transform.scale(card_img, (400, 400))
-    gameDisplay.blit(card_img, (coord[0],coord[1]))
 
 
 def load_images(dobble,win):
@@ -147,7 +142,7 @@ def redraw_gameWindow(win, dobble, color, ready):
             win.blit(txt3, (width / 2 - txt3.get_width() / 2, 100))
     
     if ready and card_num !=dobble.card_pair_no:
-        win.fill('white')
+        win.fill(white)
         if color == "p1":
             txt3 = font.render("YOU ARE PLAYER1", 1, (255, 0, 0))
             win.blit(txt3, (width / 2 - txt3.get_width() / 2, 100))
