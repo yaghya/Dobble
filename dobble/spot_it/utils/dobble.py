@@ -3,6 +3,7 @@ import time
 import csv
 import numpy as np
 import math
+import os
 # import tkinter
 # root = tkinter.Tk()
 # root.withdraw()
@@ -43,6 +44,8 @@ class Dobble:
         #self.cards = get_cards_using_doble_utils_generate_cards  or read_from_a_csv_file
         self.cards_list = read_csv(self.card_pack_path)
         self.cards_pairs_list = self.get_cards_pairs_list()
+        self.card_names = open(os.path.join('data','image_names.txt'),'r+').readlines()
+        print(self.card_names)
 
         self.card_pair_no = 0
 
@@ -127,5 +130,5 @@ class Dobble:
         # print(np.where(np.asarray(self.card1)==self.common_image),np.asarray(self.card1))
         self.card1_common_image = np.where(np.asarray(self.card1)==self.common_image[0])[0][0]
         self.card2_common_image = np.where(np.asarray(self.card2)==self.common_image[0])[0][0]
-        # print(self.common_image,self.card_pair_no)
+        print(self.common_image,self.card_pair_no,self.card1_common_image,self.card2_common_image,self.card1,self.card2)
         self.card_pair_no+=1

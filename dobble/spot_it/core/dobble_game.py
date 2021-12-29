@@ -1,4 +1,5 @@
 from operator import xor
+from numpy.lib.type_check import imag
 
 from numpy.testing._private.utils import import_nose
 import pygame
@@ -14,7 +15,7 @@ import pickle
 pygame.font.init()
 
 # board = pygame.transform.scale(pygame.image.load(os.path.join("img","board_alt.png")), (750, 750))
-starting_image =  pygame.image.load(os.path.join("./data/starting_image.png"))
+starting_image =  pygame.image.load(os.path.join("data/starting_image.png"))
 white = (255,255,255)
 card_num = 0
 
@@ -55,14 +56,18 @@ def menu_screen(win, name):
                     print("Server Offline")
                     offline = True
 
-def display_image(coord,gameDisplay,colour):
+def display_image(coord,image_path, gameDisplay):
     coord1 =coord[0]
     coord2 = coord[1]
     # print(coord1,coord2)
     # print(coord[0][0])
     # import pdb; pdb.set_trace()
-    rect = pygame.Rect(coord1[0],coord1[1],coord2[0]-coord1[0],coord2[1]-coord1[1])
-    pygame.draw.rect(gameDisplay, pygame.Color(colour), rect)
+    print(os.path.join(str(image_path)))
+    img= pygame.image.load(os.path.join(image_path))
+    img = pygame.transform.scale(img, (coord2[0]-coord1[0],coord2[1]-coord1[1]))
+    win.blit(img, (coord1[0],coord1[1]))
+    # rect = pygame.Rect(coord1[0],coord1[1],coord2[0]-coord1[0],coord2[1]-coord1[1])
+    # pygame.draw.rect(gameDisplay, pygame.Color(colour), rect)
 
     return
     card_img_name = f'{self.card_dir}/card_{card_no}.png'
@@ -88,11 +93,11 @@ def load_images(dobble,win):
         # len(random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]))
         # dobble.card1_images[i] = random.choice([[(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],3)[1:2]]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],3)[1:2]]),random.choice([[(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],3)[1:2]]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],3)[1:2]])
         # print(dobble.card1_images[i])
-        display_image(dobble.card1_images[i],win,"red")
+        display_image(dobble.card1_images[i],str(dobble.card_names[int(dobble.card1[i])-1])[:-1],win)
         # dobble.card2_images[i] = [random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]),
                             # random.choice([[(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],3)[1:2]]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],3)[1:2]])]
         # print(dobble.card2_images[i])
-        display_image(dobble.card2_images[i],win,"yellow")
+        display_image(dobble.card2_images[i],str(dobble.card_names[int(dobble.card2[i])-1])[:-1],win)
 
 
 # def redraw_gameWindow(win, dobble, p1, p2, color, ready):
