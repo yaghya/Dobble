@@ -76,7 +76,7 @@ def threaded_client(conn, game, spec=False):
         if currentId == "p2":
             dobble.ready = True
             dobble.startTime = time.time()
-
+        dobble.card_pair_no = 0
 
         while True:
             if game not in games:
@@ -92,16 +92,28 @@ def threaded_client(conn, game, spec=False):
                         string = data.split(" ")
                         if string[1]=="card1" and int(string[2])==int(dobble.card1_common_image):
                             print("updating card")
+                            if string[3]=="p1":
+                                dobble.p1_points+=1
+                            else:
+                                dobble.p2_points+=1
                             dobble.update_card()
                         elif string[1]=="card2" and int(string[2])==int(dobble.card2_common_image):
                             print("updating card")
+                            if string[3]=="p1":
+                                dobble.p1_points+=1
+                            else:
+                                dobble.p2_points+=1
                             dobble.update_card()
+                        
                     #     all = data.split(" ")
                     #     col = int(all[1])
                     #     row = int(all[2])
                     #     color = all[3]
                     #     dobble.select(col, row, color)
 
+                    if data =="tie game":
+                        dobble.winner = "draw"
+                        print("[GAME] draw", game)
                     if data == "winner p2":
                         dobble.winner = "p2"
                         print("[GAME] Player p2 won in game", game)

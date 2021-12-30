@@ -29,8 +29,8 @@ class Dobble:
         
         self.p1name = "Player1"
         self.p2name = "Player2"
-        self.storedTime1 = 0
-        self.storedTime2 = 0
+        self.p1_points = 0
+        self.p2_points = 0
 
         self.winner = None
         self.startTime = time.time()
@@ -45,7 +45,7 @@ class Dobble:
         self.cards_list = read_csv(self.card_pack_path)
         self.cards_pairs_list = self.get_cards_pairs_list()
         self.card_names = open(os.path.join('data','image_names.txt'),'r+').readlines()
-        print(self.card_names)
+        # print(self.card_names)
 
         self.card_pair_no = 0
 
@@ -90,8 +90,8 @@ class Dobble:
                 if i!=j:
                     cards_pairs_list.append((i,j))
 
-        print(len(cards_pairs_list))
-        cards_pairs_list = random.sample(cards_pairs_list,20)
+        # print(len(cards_pairs_list))
+        cards_pairs_list = random.sample(cards_pairs_list,30)
         return cards_pairs_list
     
     def get_common_image(self,i):

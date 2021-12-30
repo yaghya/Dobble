@@ -22,11 +22,13 @@ card_num = 0
 
 def menu_screen(win, name):
     global dobble, starting_image
+    card_num = 0
     run = True
     offline = False
 
     while run:
         starting_image = pygame.transform.scale(starting_image, (width, height))
+        win.fill(white)
         win.blit(starting_image, (0,0))
         small_font = pygame.font.SysFont("comicsans", 50)
         
@@ -50,7 +52,7 @@ def menu_screen(win, name):
                     # dobble.Width = width
                     # dobble.Height = height
                     print("connection established")
-                    run = False
+                    # run = False
                     main()
                     break
                 except:
@@ -63,7 +65,7 @@ def display_image(coord,image_path, gameDisplay):
     # print(coord1,coord2)
     # print(coord[0][0])
     # import pdb; pdb.set_trace()
-    print(os.path.join(str(image_path)))
+    # print(os.path.join(str(image_path)))
     img= pygame.image.load(os.path.join(image_path))
     img = pygame.transform.scale(img, (coord2[0]-coord1[0],coord2[1]-coord1[1]))
     win.blit(img, (coord1[0],coord1[1]))
@@ -78,7 +80,7 @@ def load_images(dobble,win):
     # print(len(dobble.card1_images),len(dobble.card2_images),len(square1),len(square2))
     r = int((0.45/2)*width)
     h = (height - 0.45*width)/2
-    print(int(r+(0.1/4)*width),int(h+r),int(3*r+(0.3/4)*width),int(h+r),r,h)
+    # print(int(r+(0.1/4)*width),int(h+r),int(3*r+(0.3/4)*width),int(h+r),r,h)
     pygame.draw.circle(win, "black", (int(r+(0.1/4)*width),int(h+r) ), r, int(width/100))
     pygame.draw.circle(win, "black", (int(3*r+(0.3/4)*width),int(h+r) ), r, int(width/100))
 
@@ -99,16 +101,7 @@ def load_images(dobble,win):
 def redraw_gameWindow(win, dobble, color, ready):
 
     global card_num
-    # win.blit(board, (0, 0))
-    # bo.draw(win, color)
-
-    # formatTime1 = str(int(p1//60)) + ":" + str(int(p1%60))
-    # formatTime2 = str(int(p2 // 60)) + ":" + str(int(p2 % 60))
-    # if int(p1%60) < 10:
-    #     formatTime1 = formatTime1[:-1] + "0" + formatTime1[-1]
-    # if int(p2%60) < 10:
-    #     formatTime2 = formatTime2[:-1] + "0" + formatTime2[-1]
-
+    
     font = pygame.font.SysFont("comicsans", 30)
     # try:
     #     txt = font.render(bo.p1Name + "\'s Time: " + str(formatTime2), 1, (255, 255, 255))
@@ -200,16 +193,13 @@ def main():
             run = False
             break
 
-        # if not color == "s":
-        #     if p1Time <= 0:
-        #         dobble = n.send("winner b")
-        #     elif p2Time <= 0:
-        #         dobble = n.send("winner w")
-
-        #     if dobble.check_mate("b"):
-        #         dobble = n.send("winner b")
-        #     elif dobble.check_mate("w"):
-        #         dobble = n.send("winner w")
+        if not color == "s" and dobble.card_pair_no ==5:
+            if dobble.p1_points > dobble.p2_points:
+                dobble = n.send("winner p1")
+            elif dobble.p1_points < dobble.p2_points:
+                dobble = n.send("winner p2")
+            else :
+                dobble = n.send("tie game")
 
         if dobble.winner == "p1":
             end_screen(win, f"{dobble.p1name} is the Winner!")
@@ -217,6 +207,10 @@ def main():
         elif dobble.winner == "p2":
             end_screen(win, f"{dobble.p2name} is the winner")
             run = False
+        elif dobble.winner == "draw":
+            end_screen(win, f"Game Draw")
+            run = False
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -241,18 +235,18 @@ def main():
 
             #MOUSEBUTTONDOWN Send the image selected info and get results it is a winner or not
             if event.type == pygame.MOUSEBUTTONUP and color != "s":
-                if  dobble.ready:
+                if dobble.ready:
                     pos = pygame.mouse.get_pos()
                     # print(pos)
                     card_number,image_num = click(pos) # depending on the pos select the image
                     if image_num!=-1:
                         print(image_num)
-                        dobble = n.send("selected " + card_number+" "+ str(image_num))
+                        dobble = n.send("selected " + card_number+" "+ str(image_num) + " " +color)
                     # check whether it is correct or not and highlight the image with red or green colour
     
     n.disconnect()
     dobble = 0
-    menu_screen(win)
+    menu_screen(win,name)
 
 def click(pos):
     """
@@ -281,6 +275,7 @@ def click(pos):
 def end_screen(win, text):
     pygame.font.init()
     font = pygame.font.SysFont("comicsans", 80)
+    win.fill(white)
     txt = font.render(text,1, (255,0,0))
     win.blit(txt, (width / 2 - txt.get_width() / 2, 300))
     pygame.display.update()
