@@ -22,11 +22,11 @@ card_num = 0
 
 def menu_screen(win, name):
     global dobble, starting_image
-    card_num = 0
     run = True
     offline = False
 
     while run:
+        card_num = 0
         starting_image = pygame.transform.scale(starting_image, (width, height))
         win.fill(white)
         win.blit(starting_image, (0,0))
@@ -52,7 +52,7 @@ def menu_screen(win, name):
                     # dobble.Width = width
                     # dobble.Height = height
                     print("connection established")
-                    # run = False
+                    run = False
                     main()
                     break
                 except:
@@ -204,12 +204,15 @@ def main():
         if dobble.winner == "p1":
             end_screen(win, f"{dobble.p1name} is the Winner!")
             run = False
+            break
         elif dobble.winner == "p2":
             end_screen(win, f"{dobble.p2name} is the winner")
             run = False
+            break
         elif dobble.winner == "draw":
             end_screen(win, f"Game Draw")
             run = False
+            break
         
 
         for event in pygame.event.get():
