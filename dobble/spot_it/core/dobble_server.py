@@ -54,8 +54,8 @@ def read_specs():
 
 
 def threaded_client(conn, game, spec=False):
-    global pos, games, currentId, connections, specs
-
+    global games, connections, specs
+    
     if not spec:
         name = None
         dobble = games[game]
@@ -86,6 +86,7 @@ def threaded_client(conn, game, spec=False):
                 d = conn.recv(8192 * 3)
                 data = d.decode("utf-8")
                 if not d:
+                    print("breaking because of not d")
                     break
                 else:
                     if data.count("selected") > 0:

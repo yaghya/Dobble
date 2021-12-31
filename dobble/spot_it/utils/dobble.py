@@ -16,9 +16,9 @@ def read_csv(file_path):
     return your_list
 
 class Dobble:
-    rect = (113,113,525,525)
-    startX = rect[0]
-    startY = rect[1]
+    # rect = (113,113,525,525)
+    # startX = rect[0]
+    # startY = rect[1]
 
     card_pack_path = "./generated/card_pack.csv"
 
@@ -50,8 +50,8 @@ class Dobble:
         self.card_pair_no = 0
 
 
-        self.Width = 1200
-        self.Height = 900
+        # self.Width = 1200
+        # self.Height = 900
     
     def compute_image_coordinates(self):
         global square1,square2
