@@ -131,6 +131,11 @@ def redraw_gameWindow(win, dobble, color, ready):
         else:
             txt3 = font.render("YOU ARE PLAYER2", 1, (255, 0, 0))
             win.blit(txt3, (width / 2 - txt3.get_width() / 2, 100))
+        p1_points = font.render(str(dobble.p1Name)+" "+str(dobble.p1_points), 2, (255, 0, 0))
+        win.blit(p1_points, ((0.1)*width / 2 , 100))
+        p2_points = font.render(str(dobble.p2Name)+" "+str(dobble.p2_points), 2, (255, 0, 0))
+        win.blit(p2_points, (width -(0.1)*width/2 - txt3.get_width() / 2, 100))
+
         print(dobble.card_pair_no ,card_num)
         load_images(dobble,win)
         card_num +=1
@@ -146,8 +151,6 @@ def main():
     print("color",color)
     count = 0
 
-    # dobble = n.send("show_card")
-    # print("card_updated")
     dobble = n.send("name " + name)
     print(dobble.p1name,dobble.p2name)
     dobble = n.send("width&height "+str(width) +" "+str(height))
@@ -157,17 +160,13 @@ def main():
 
     while run:
         if not color == "s":
-            # # p1Time = dobble.time1
-            # # p2Time = dobble.time2
             if count == 60:
                 dobble = n.send("get")
                 count = 0
             else:
                 count += 1
-            # clock.tick(30)
 
         try:
-            # redraw_gameWindow(win, dobble, p1Time, p2Time, color, dobble.ready) 
             redraw_gameWindow(win, dobble, color, dobble.ready) #draw images depending on card_no info in dobble object
 
         except Exception as e:
@@ -197,7 +196,8 @@ def main():
             run = False
             break
         
-        
+        mouse = pygame.mouse.get_pos()
+        highlight(mouse)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -214,6 +214,12 @@ def main():
                     card_number,image_num = click(pos) # depending on the pos select the image
                     if image_num!=-1:
                         print(image_num)
+                        check(image_num,card_number)
+                        count =0
+                        pygame.display.update()
+                        while count < 30:
+                            clock.tick(100)
+                            count+=1
                         dobble = n.send("selected " + card_number+" "+ str(image_num) + " " +color)
                     # check whether it is correct or not and highlight the image with red or green colour
     
@@ -232,7 +238,6 @@ def click(pos):
         A = coord[0]
         B = coord[1]
         if A[0]<=x<=B[0] and A[1]<=y<=B[1]:
-            # print(A,B,x,y)
             return "card1",i
     
     for i,coord in enumerate(dobble.card2_images):
@@ -242,8 +247,58 @@ def click(pos):
             return "card2",i
     
     return "no_card",-1
+
+def highlight(mouse):
+    x = mouse[0]
+    y = mouse[1]
+
+
+    for i,coord in enumerate(dobble.card1_images):
+        A = coord[0]
+        B = coord[1]
+        if A[0]<=x<=B[0] and A[1]<=y<=B[1]:
+            pygame.draw.rect(win, [0,0,255], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+        else:
+            pygame.draw.rect(win, white, [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+    
+    for i,coord in enumerate(dobble.card2_images):
+        A = coord[0]
+        B = coord[1]
+        if A[0]<=x<=B[0] and A[1]<=y<=B[1]:
+            pygame.draw.rect(win, [0,0,255], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+        else:
+            pygame.draw.rect(win, white, [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
     
 
+def check(image_num,card_number):
+    print(int(image_num),card_number)
+    if card_number=="card1":
+        coord = dobble.card1_images[int(image_num)]
+        A = coord[0]
+        B = coord[1]
+        if  int(image_num)==int(dobble.card1_common_image):
+            pygame.draw.rect(win, [0,255,0], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+            print("green")
+        else:
+            pygame.draw.rect(win, [255,0,0], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+            print("red")
+
+    elif card_number=="card2":
+        coord = dobble.card2_images[int(image_num)]
+        A = coord[0]
+        B = coord[1]
+        if  int(image_num)==int(dobble.card2_common_image):
+            pygame.draw.rect(win, [0,255,0], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+            print("green")
+        else:
+            pygame.draw.rect(win, [255,0,0], [A[0]-2,A[1]-2,B[0]-A[0]+2,B[1]-A[1]+2],2)
+            print("red")
+
+    print("done")
+    
+
+        
+        
 
 def end_screen(win, text):
     pygame.font.init()
