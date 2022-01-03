@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server = "localhost"
-port = 5555
+port = 6000
 
 server_ip = socket.gethostbyname(server)
 

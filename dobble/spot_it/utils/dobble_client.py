@@ -5,8 +5,8 @@ import time
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.host = "localhost"
-        self.port = 5555
+        self.host = "tcp://2.tcp.ngrok.io"
+        self.port = 10678
         self.addr = (self.host, self.port)
         self.dobble = self.connect()
         self.dobble = pickle.loads(self.dobble)
