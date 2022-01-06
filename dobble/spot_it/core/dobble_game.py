@@ -165,7 +165,7 @@ def main():
                 count = 0
             else:
                 count += 1
-
+            clock.tick(30)
         try:
             redraw_gameWindow(win, dobble, color, dobble.ready) #draw images depending on card_no info in dobble object
 

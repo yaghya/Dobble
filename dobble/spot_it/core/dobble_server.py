@@ -19,8 +19,9 @@ clock = pygame.time.Clock()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server = "localhost"
+server = "0.0.0.0"
 port = 6000
+
 
 server_ip = socket.gethostbyname(server)
 
@@ -30,7 +31,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen()
+s.listen(5)
 print("[START] Waiting for a connection")
 
 connections = 0
