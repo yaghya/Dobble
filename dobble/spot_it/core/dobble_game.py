@@ -20,6 +20,9 @@ starting_image =  pygame.image.load(os.path.join("data/starting_image.png"))
 white = background_colour
 card_num = 0
 
+card_names = open(os.path.join('data','image_names.txt'),'r+').readlines()
+
+
 def menu_screen(win):
     global dobble, starting_image, card_num
     run = True
@@ -48,6 +51,7 @@ def menu_screen(win):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 offline = False
                 try:
+                    print("trying to connect")
                     dobble = connect()
                     # dobble.Width = width
                     # dobble.Height = height
@@ -91,10 +95,12 @@ def load_images(dobble,win):
         # dobble.card1_images[i] = random.choice([[(a,b) for a in np.linspace(square1[u][v][0],square1[u+1][v+1][0],3)[1:2]]for b in np.linspace(square1[u][v][1],square1[u+1][v+1][1],3)[1:2]]),random.choice([[(a,b) for a in np.linspace(square1[u+1][v+1][0],square1[u+2][v+2][0],3)[1:2]]for b in np.linspace(square1[u+1][v+1][1],square1[u+2][v+2][1],3)[1:2]])
         # print(dobble.card1_images[i])
         display_image(dobble.card1_images[i],str(dobble.card_names[int(dobble.card1[i])-1])[:-1],win)
+        # display_image(dobble.card1_images[i],str(card_names[int(dobble.card1[i])-1])[:-1],win)
         # dobble.card2_images[i] = [random.choice([[(a,b) for a in np.linspace(square2[u][v][0],square2[u+1][v+1][0],3)[1:2]]for b in np.linspace(square2[u][v][1],square2[u+1][v+1][1],3)[1:2]]),
                             # random.choice([[(a,b) for a in np.linspace(square2[u+1][v+1][0],square2[u+2][v+2][0],3)[1:2]]for b in np.linspace(square2[u+1][v+1][1],square2[u+2][v+2][1],3)[1:2]])]
         # print(dobble.card2_images[i])
         display_image(dobble.card2_images[i],str(dobble.card_names[int(dobble.card2[i])-1])[:-1],win)
+        # display_image(dobble.card2_images[i],str(card_names[int(dobble.card2[i])-1])[:-1],win)
 
 
 # def redraw_gameWindow(win, dobble, p1, p2, color, ready):
@@ -131,9 +137,9 @@ def redraw_gameWindow(win, dobble, color, ready):
         else:
             txt3 = font.render("YOU ARE PLAYER2", 1, (255, 0, 0))
             win.blit(txt3, (width / 2 - txt3.get_width() / 2, 100))
-        p1_points = font.render(str(dobble.p1Name)+" "+str(dobble.p1_points), 2, (255, 0, 0))
+        p1_points = font.render(str(dobble.p1name)+" "+str(dobble.p1_points), 2, (255, 0, 0))
         win.blit(p1_points, ((0.1)*width / 2 , 100))
-        p2_points = font.render(str(dobble.p2Name)+" "+str(dobble.p2_points), 2, (255, 0, 0))
+        p2_points = font.render(str(dobble.p2name)+" "+str(dobble.p2_points), 2, (255, 0, 0))
         win.blit(p2_points, (width -(0.1)*width/2 - txt3.get_width() / 2, 100))
 
         print(dobble.card_pair_no ,card_num)
