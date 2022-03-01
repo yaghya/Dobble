@@ -45,7 +45,6 @@ class Dobble:
         self.cards_list = read_csv(self.card_pack_path)
         self.cards_pairs_list = self.get_cards_pairs_list()
         self.card_names = open(os.path.join('data','image_names.txt'),'r+').readlines()
-        # print(self.card_names)
 
         self.card_pair_no = 0
 

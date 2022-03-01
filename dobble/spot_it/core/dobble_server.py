@@ -8,24 +8,16 @@ from spot_it.utils.dobble import Dobble
 import pickle
 import time
 import pygame
-# pygame.init()
-# infos = pygame.display.Info()
-# screen_size = (infos.current_w, infos.current_h)
-# pygame.quit()
-clock = pygame.time.Clock()
-# screen_size = (1600,1000)
 
+clock = pygame.time.Clock()
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 4096)
 
 server = "0.0.0.0"
-<<<<<<< HEAD
-port = 5555
-=======
-port = 6000
+port = 8000
 
->>>>>>> 56691f0f859b0fe1accafdf8ebf6265ec63934b7
 
 server_ip = socket.gethostbyname(server)
 
@@ -35,7 +27,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen(5)
+s.listen()
 print("[START] Waiting for a connection")
 
 connections = 0
@@ -70,97 +62,106 @@ def threaded_client(conn, game, spec=False):
         else:
             currentId = "p2"
 
-        dobble.start_user = currentId
-
-        # Pickle the object and send it to the server
-        data_string = pickle.dumps(dobble)
-
-        conn.send(data_string)
-        connections += 1
 
         if currentId == "p2":
             dobble.ready = True
             dobble.startTime = time.time()
         dobble.card_pair_no = 0
+        dobble.start_user = currentId
+
+        # Pickle the object and send it to the server
+        data_string = pickle.dumps(dobble)
+        # print(data_string,len(data_string))
+        conn.send(data_string)
+        connections += 1
 
         while True:
             if game not in games:
                 break
 
             try:
-                d = conn.recv(8192 * 3)
-                data = d.decode("utf-8")
-                if not d:
-                    print("breaking because of not d")
-                    break
-                else:
-                    if data.count("selected") > 0:
-                        string = data.split(" ")
-                        if string[1]=="card1" and int(string[2])==int(dobble.card1_common_image):
-                            print("updating card")
-                            if string[3]=="p1":
-                                dobble.p1_points+=1
-                            else:
-                                dobble.p2_points+=1
-                            dobble.update_card()
-                        elif string[1]=="card2" and int(string[2])==int(dobble.card2_common_image):
-                            print("updating card")
-                            if string[3]=="p1":
-                                dobble.p1_points+=1
-                            else:
-                                dobble.p2_points+=1
-                            dobble.update_card()
-                        
-                    #     all = data.split(" ")
-                    #     col = int(all[1])
-                    #     row = int(all[2])
-                    #     color = all[3]
-                    #     dobble.select(col, row, color)
-
-                    if data =="tie game":
-                        dobble.winner = "draw"
-                        print("[GAME] draw", game)
-                    if data == "winner p2":
-                        dobble.winner = "p2"
-                        print("[GAME] Player p2 won in game", game)
-                    if data == "winner p1":
-                        dobble.winner = "p1"
-                        print("[GAME] Player p1 won in game", game)
-
-                    # if data == "show_card":
-                    #     print("updating card")
-                    #     dobble.update_card()
-                    if data.count("width&height") == 1:
-                        print("updating width and height")
-                        string = data.split(" ")
-                        dobble.Width = int(string[1])
-                        dobble.Height = int(string[2])
-
-                    if data.count("name") == 1:
-                        print("updating name")
-                        name = data.split(" ")[1:]
-                        name = " ".join(name)
-                        if currentId == "p2":
-                            dobble.p2Name = name
-                        elif currentId == "p1":
-                            dobble.p1Name = name
-
-                    #print("Recieved doble_game from", currentId, "in game", game)
-
-                    # if dobble.ready:
-                    #     if dobble.turn == "p1":
-                    #         dobble.time1 = 900 - (time.time() - dobble.startTime) - dobble.storedTime1
-                    #     else:
-                    #         dobble.time2 = 900 - (time.time() - dobble.startTime) - dobble.storedTime2
-
-                    if dobble.ready and dobble.card_pair_no ==0:
-                        print("starting game")
-                        print(dobble.Width,dobble.Height)
+                reply = []
+                # conn.settimeout(2.0)
+                i=0
+                packet =conn.recv(4*4096)
+                reply.append(packet)
+                # while True:
+                #     try :
+                #         print(i)
+                #         packet =conn.recv(4096)
+                #         print("packet",packet,len(packet))
+                #         if len(packet)==0:
+                #             print("no packet receieved")
+                #             break
+                #         reply.append(packet)
+                #         i+=1
+                #         if len(packet)<4096:
+                #             break
+                #     except Exception as e:
+                #         print(e)
+                #         break
+                # conn.settimeout(None)
+                d =b"".join(reply)
+                # print(len(d))
+                data = pickle.loads(d)
+                if "get" not in data:
+                    print(conn,data)
+                # if not d:
+                #     print("breaking because of not d")
+                #     break
+                # else:
+                if data.count("selected") > 0:
+                    string = data.split(" ")
+                    if string[1]=="card1" and int(string[2])==int(dobble.card1_common_image):
+                        print("updating card")
+                        if string[3]=="p1":
+                            dobble.p1_points+=1
+                        else:
+                            dobble.p2_points+=1
                         dobble.update_card()
-                    sendData = pickle.dumps(dobble)
-                    #print("Sending doble_game to player", currentId, "in game", game)
+                    elif string[1]=="card2" and int(string[2])==int(dobble.card2_common_image):
+                        print("updating card")
+                        if string[3]=="p1":
+                            dobble.p1_points+=1
+                        else:
+                            dobble.p2_points+=1
+                        dobble.update_card()
+                    
+                if data =="tie game":
+                    dobble.winner = "draw"
+                    print("[GAME] draw", game)
+                if data == "winner p2":
+                    dobble.winner = "p2"
+                    print("[GAME] Player p2 won in game", game)
+                if data == "winner p1":
+                    dobble.winner = "p1"
+                    print("[GAME] Player p1 won in game", game)
 
-                conn.sendall(sendData)
+                if data.count("width&height") == 1:
+                    print("updating width and height")
+                    string = data.split(" ")
+                    dobble.Width = int(string[1])
+                    dobble.Height = int(string[2])
+
+                if data.count("name") == 1:
+                    print("updating name")
+                    name = data.split(" ")[1:]
+                    name = " ".join(name)
+                    if currentId == "p2":
+                        dobble.p2name = name
+                    elif currentId == "p1":
+                        dobble.p1name = name
+
+                # print("Recieved doble_game from", currentId, "in game", game)
+
+                if dobble.ready and dobble.card_pair_no ==0:
+                    # print("starting game")
+                    # print(dobble.Width,dobble.Height)
+                    dobble.update_card()
+                sendData = pickle.dumps(dobble)
+                # print("Sending doble_game to player", currentId, "in game", game)
+
+                conn.send(sendData)
 
             except Exception as e:
                 print(e)
@@ -174,48 +175,48 @@ def threaded_client(conn, game, spec=False):
         print("[DISCONNECT] Player", name, "left game", game)
         conn.close()
 
-    else:
-        available_games = list(games.keys())
-        game_ind = 0
-        dobble = games[available_games[game_ind]]
-        dobble.start_user = "s"
-        data_string = pickle.dumps(dobble)
-        conn.send(data_string)
+    # else:
+    #     available_games = list(games.keys())
+    #     game_ind = 0
+    #     dobble = games[available_games[game_ind]]
+    #     dobble.start_user = "s"
+    #     data_string = pickle.dumps(dobble)
+    #     conn.send(data_string)
 
-        while True:
-            available_games = list(games.keys())
-            dobble = games[available_games[game_ind]]
-            try:
-                d = conn.recv(128)
-                data = d.decode("utf-8")
-                if not d:
-                    break
-                else:
-                    try:
-                        if data == "forward":
-                            print("[SPECTATOR] Moved Games forward")
-                            game_ind += 1
-                            if game_ind >= len(available_games):
-                                game_ind = 0
-                        elif data == "back":
-                            print("[SPECTATOR] Moved Games back")
-                            game_ind -= 1
-                            if game_ind < 0:
-                                game_ind = len(available_games) -1
+    #     while True:
+    #         available_games = list(games.keys())
+    #         dobble = games[available_games[game_ind]]
+    #         try:
+    #             d = conn.recv(128*8*8*12)
+    #             data = d.decode("utf-8")
+    #             if not d:
+    #                 break
+    #             else:
+    #                 try:
+    #                     if data == "forward":
+    #                         print("[SPECTATOR] Moved Games forward")
+    #                         game_ind += 1
+    #                         if game_ind >= len(available_games):
+    #                             game_ind = 0
+    #                     elif data == "back":
+    #                         print("[SPECTATOR] Moved Games back")
+    #                         game_ind -= 1
+    #                         if game_ind < 0:
+    #                             game_ind = len(available_games) -1
 
-                        dobble = games[available_games[game_ind]]
-                    except:
-                        print("[ERROR] Invalid Game Recieved from Spectator")
+    #                     dobble = games[available_games[game_ind]]
+    #                 except:
+    #                     print("[ERROR] Invalid Game Recieved from Spectator")
 
-                    sendData = pickle.dumps(dobble)
-                    conn.sendall(sendData)
+    #                 sendData = pickle.dumps(dobble)
+    #                 conn.sendall(sendData)
 
-            except Exception as e:
-                print(e)
+    #         except Exception as e:
+    #             print(e)
 
-        print("[DISCONNECT] Spectator left game", game)
-        specs -= 1
-        conn.close()
+    #     print("[DISCONNECT] Spectator left game", game)
+    #     specs -= 1
+    #     conn.close()
 
 
 while True:
