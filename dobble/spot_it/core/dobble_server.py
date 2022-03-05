@@ -27,7 +27,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen()
+s.listen(6)
 print("[START] Waiting for a connection")
 
 connections = 0
@@ -137,6 +137,9 @@ def threaded_client(conn, game, spec=False):
                     dobble.winner = "p1"
                     print("[GAME] Player p1 won in game", game)
 
+                if dobble.winner is not None:
+                    break
+
                 if data.count("width&height") == 1:
                     print("updating width and height")
                     string = data.split(" ")
@@ -161,7 +164,7 @@ def threaded_client(conn, game, spec=False):
                 sendData = pickle.dumps(dobble)
                 # print("Sending doble_game to player", currentId, "in game", game)
 
-                conn.send(sendData)
+                conn.sendall(sendData)
 
             except Exception as e:
                 print(e)

@@ -4,10 +4,6 @@ import csv
 import numpy as np
 import math
 import os
-# import tkinter
-# root = tkinter.Tk()
-# root.withdraw()
-# width,height = root.winfo_screenwidth(), root.winfo_screenheight()
 
 def read_csv(file_path):
     with open(file_path, newline='\n') as f:
@@ -16,10 +12,7 @@ def read_csv(file_path):
     return your_list
 
 class Dobble:
-    # rect = (113,113,525,525)
-    # startX = rect[0]
-    # startY = rect[1]
-
+   
     card_pack_path = "./generated/card_pack.csv"
 
     def __init__(self):
