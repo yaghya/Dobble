@@ -77,6 +77,7 @@ def threaded_client(conn, game, spec=False):
 
         while True:
             if game not in games:
+                print(game ,"not in ",games)
                 break
 
             try:
@@ -138,6 +139,9 @@ def threaded_client(conn, game, spec=False):
                     print("[GAME] Player p1 won in game", game)
 
                 if dobble.winner is not None:
+                    sendData = pickle.dumps(dobble)
+                    print("Sending doble_game to player", currentId, "in game", game)
+                    conn.sendall(sendData)
                     break
 
                 if data.count("width&height") == 1:
@@ -168,6 +172,7 @@ def threaded_client(conn, game, spec=False):
 
             except Exception as e:
                 print(e)
+                break
         
         connections -= 1
         try:
@@ -177,7 +182,7 @@ def threaded_client(conn, game, spec=False):
             pass
         print("[DISCONNECT] Player", name, "left game", game)
         conn.close()
-
+        return
     # else:
     #     available_games = list(games.keys())
     #     game_ind = 0
@@ -228,7 +233,7 @@ while True:
         conn, addr = s.accept()
         spec = False
         g = -1
-        print("[CONNECT] New connection")
+        print("[CONNECT] New connection",conn,addr)
 
         for game in games.keys():
             if games[game].ready == False:

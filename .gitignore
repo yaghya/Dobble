@@ -130,8 +130,9 @@ dmypy.json
 
 #ignore
 dobble/experiments/
-dobble/generated/
 dobble/env/
 dobble/data/archive/
 dobble/data/archive.zip
 dobble/project_env/
+pygame-websockets/
+dobble/spot_it/examples/
