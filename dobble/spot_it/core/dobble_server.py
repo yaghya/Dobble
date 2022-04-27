@@ -102,8 +102,10 @@ def threaded_client(conn, game, spec=False):
                 #         break
                 # conn.settimeout(None)
                 d =b"".join(reply)
-                # print(len(d))
+                print(len(d))
                 data = pickle.loads(d)
+                if len(data)==0:
+                    break
                 if "get" not in data:
                     print(conn,data)
                 # if not d:
@@ -126,7 +128,9 @@ def threaded_client(conn, game, spec=False):
                         else:
                             dobble.p2_points+=1
                         dobble.update_card()
-                    
+                if dobble.winner is not None:
+                    break
+
                 if data =="tie game":
                     dobble.winner = "draw"
                     print("[GAME] draw", game)
@@ -137,8 +141,7 @@ def threaded_client(conn, game, spec=False):
                     dobble.winner = "p1"
                     print("[GAME] Player p1 won in game", game)
 
-                if dobble.winner is not None:
-                    break
+                
 
                 if data.count("width&height") == 1:
                     print("updating width and height")
