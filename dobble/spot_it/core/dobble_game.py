@@ -160,7 +160,6 @@ def main():
     count = 0
 
     dobble = n.send("name " + name)
-    time.sleep(1)
     print(dobble.p1name,dobble.p2name)
     dobble = n.send("width&height "+str(width) +" "+str(height))
     clock = pygame.time.Clock()
@@ -168,16 +167,15 @@ def main():
     win.fill(white)
 
     while run:
-        if not color == "s":
-            dobble = n.send("get")
-            time.sleep(1) 
+        if not color=='s':
+            dobble = n.send("")
         try:
             redraw_gameWindow(win, dobble, color, dobble.ready) #draw images depending on card_no info in dobble object
 
         except Exception as e:
             print("redraw_gameWindow error",e)
             end_screen(win, "Other player left")
-            time.sleep(1)
+            time.sleep(0.1)
             run = False
             break
 
@@ -192,17 +190,17 @@ def main():
         if dobble.winner == "p1":
             end_screen(win, f"{dobble.p1name} is the Winner!")
             run = False
-            time.sleep(1)
+            time.sleep(0.5)
             break
         elif dobble.winner == "p2":
             end_screen(win, f"{dobble.p2name} is the winner")
             run = False
-            time.sleep(1)
+            time.sleep(0.5)
             break
         elif dobble.winner == "draw":
             end_screen(win, f"Game Draw")
             run = False
-            time.sleep(1)
+            time.sleep(0.5)
             break
         
         mouse = pygame.mouse.get_pos()
@@ -226,11 +224,7 @@ def main():
                         check(image_num,card_number)
                         count =0
                         pygame.display.update()
-                        # while count < 30:
-                        #     clock.tick(100)
-                        #     count+=1
                         dobble = n.send("selected " + card_number+" "+ str(image_num) + " " +color)
-                    # check whether it is correct or not and highlight the image with red or green colour
     
     n.disconnect()
     dobble = 0
