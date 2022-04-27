@@ -103,7 +103,7 @@ def threaded_client(conn, game, spec=False):
                 #         break
                 # conn.settimeout(None)
                 d =b"".join(reply)
-                print(len(d))
+                # print(len(d))
                 data = pickle.loads(d)
                 if len(data)==0:
                     break
