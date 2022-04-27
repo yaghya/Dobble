@@ -38,6 +38,7 @@ def menu_screen(win):
         msg = small_font.render("Click to start", 1, (255, 0, 0))
         if offline:
             msg = small_font.render("Server Offline, Try Again Later...", 1, (255, 0, 0))
+
         
         win.blit(msg, (width / 2 - msg.get_width() / 2, 500))
 
@@ -62,6 +63,7 @@ def menu_screen(win):
                 except:
                     print("Server Offline")
                     offline = True
+                    break
 
 def display_image(coord,image_path, gameDisplay):
     coord1 =coord[0]
@@ -158,6 +160,7 @@ def main():
     count = 0
 
     dobble = n.send("name " + name)
+    time.sleep(1)
     print(dobble.p1name,dobble.p2name)
     dobble = n.send("width&height "+str(width) +" "+str(height))
     clock = pygame.time.Clock()
@@ -166,22 +169,19 @@ def main():
 
     while run:
         if not color == "s":
-            if count == 60:
-                dobble = n.send("get")
-                count = 0
-            else:
-                count += 1
-            clock.tick(30)
+            dobble = n.send("get")
+            time.sleep(1) 
         try:
             redraw_gameWindow(win, dobble, color, dobble.ready) #draw images depending on card_no info in dobble object
 
         except Exception as e:
             print("redraw_gameWindow error",e)
             end_screen(win, "Other player left")
+            time.sleep(1)
             run = False
             break
 
-        if not color == "s" and dobble.card_pair_no ==5:
+        if not color == "s" and dobble.card_pair_no ==6:
             if dobble.p1_points > dobble.p2_points:
                 dobble = n.send("winner p1")
             elif dobble.p1_points < dobble.p2_points:
@@ -192,14 +192,17 @@ def main():
         if dobble.winner == "p1":
             end_screen(win, f"{dobble.p1name} is the Winner!")
             run = False
+            time.sleep(1)
             break
         elif dobble.winner == "p2":
             end_screen(win, f"{dobble.p2name} is the winner")
             run = False
+            time.sleep(1)
             break
         elif dobble.winner == "draw":
             end_screen(win, f"Game Draw")
             run = False
+            time.sleep(1)
             break
         
         mouse = pygame.mouse.get_pos()
@@ -213,7 +216,7 @@ def main():
 
 
             #MOUSEBUTTONDOWN Send the image selected info and get results it is a winner or not
-            if event.type == pygame.MOUSEBUTTONUP and color != "s":
+            if event.type == pygame.MOUSEBUTTONDOWN and color != "s":
                 if dobble.ready:
                     pos = pygame.mouse.get_pos()
                     # print(pos)
@@ -223,9 +226,9 @@ def main():
                         check(image_num,card_number)
                         count =0
                         pygame.display.update()
-                        while count < 30:
-                            clock.tick(100)
-                            count+=1
+                        # while count < 30:
+                        #     clock.tick(100)
+                        #     count+=1
                         dobble = n.send("selected " + card_number+" "+ str(image_num) + " " +color)
                     # check whether it is correct or not and highlight the image with red or green colour
     

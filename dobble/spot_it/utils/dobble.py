@@ -19,7 +19,7 @@ class Dobble:
 
         self.ready = False
         # self.image_path = "path using pack_no"
-        
+        self.start_user = 's'
         self.p1name = "Player1"
         self.p2name = "Player2"
         self.p1_points = 0

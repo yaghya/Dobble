@@ -7,7 +7,7 @@ import time
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.host = "ec2-13-233-87-61.ap-south-1.compute.amazonaws.com"
+        self.host = "ec2-3-111-146-4.ap-south-1.compute.amazonaws.com"
         self.port = 8000
         self.addr = (self.host, self.port)
         print(self.addr)
@@ -19,7 +19,7 @@ class Network:
 
     def connect(self):
         self.client.connect(self.addr)
-        self.client.settimeout(0.5)
+        self.client.settimeout(0.2)
         print("trying to receive")
         data = []
         while True:
@@ -52,7 +52,7 @@ class Network:
                 else:
                     self.client.send(str.encode(data))
                 reply = []
-                self.client.settimeout(0.5)
+                self.client.settimeout(0.2)
                 # i=0
                 while True:
                     try :
